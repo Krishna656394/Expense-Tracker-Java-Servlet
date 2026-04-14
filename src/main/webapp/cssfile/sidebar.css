@@ -1,0 +1,32 @@
+/* Sidebar Styling */
+.sidebar {
+    height: 100vh;
+    width: 220px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #1e1e2f; /* Dark color jo aapne pehle use kiya tha */
+    color: white;
+    padding-top: 20px;
+    z-index: 1000;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    padding: 12px;
+    text-decoration: none;
+    transition: 0.3s;
+    margin: 5px 10px;
+    border-radius: 8px;
+}
+
+.sidebar a:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Main Content Area */
+.main {
+    margin-left: 220px; /* Sidebar ki width ke barabar margin */
+    padding: 20px;
+}
