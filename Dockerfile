@@ -1,16 +1,16 @@
 FROM tomcat:10.0-jdk17-openjdk-slim
 
-# Purane default apps hatao
+# 1. Tomcat ke default apps ko delete karein
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Step 1: Poora webapp content copy karo (css, images, etc. ke liye)
+# 2. Poore webapp folder ko ROOT mein copy karein (Isse cssfile, image, META-INF, WEB-INF chale jayenge)
 COPY src/main/webapp/ /usr/local/tomcat/webapps/ROOT/
 
-# Step 2: Kyunki index.jsp 'jspfile' ke andar hai, hum use bahar copy karenge 
-# taaki link khulte hi project dikhne lage
-RUN cp /usr/local/tomcat/webapps/ROOT/jspfile/index.jsp /usr/local/tomcat/webapps/ROOT/index.jsp
+# 3. JSP files jo 'jspfile' folder ke andar hain, unhe ROOT ke bahar copy karein 
+# taaki paths simple ho jayein (index.jsp, login.jsp etc. ab direct khulenge)
+RUN cp -r /usr/local/tomcat/webapps/ROOT/jspfile/* /usr/local/tomcat/webapps/ROOT/
 
-# Permissions fix
+# 4. Permissions set karein
 RUN chmod -R 777 /usr/local/tomcat/webapps/ROOT
 
 EXPOSE 8080
