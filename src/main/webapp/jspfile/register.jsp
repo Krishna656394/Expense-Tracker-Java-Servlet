@@ -44,7 +44,7 @@
 
             <h3 class="text-center mb-3">Join Us! 🚀</h3>
 
-            <form action="../RegisterServlet" method="post" onsubmit="return validatePassword()">
+            <form action="RegisterServlet" method="post" onsubmit="return validatePassword()">
 
                 <div class="row">
                     <div class="col-md-6">
