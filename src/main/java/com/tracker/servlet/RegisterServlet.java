@@ -8,13 +8,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import com.tracker.db.DBConnect;
 
 @WebServlet("/RegisterServlet")
 public class RegisterServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        // JSP Form se data nikalna (name attributes match hone chahiye)
+        // JSP Form se data nikalna
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String mobile = request.getParameter("mobile");
@@ -23,9 +24,20 @@ public class RegisterServlet extends HttpServlet {
         String city = request.getParameter("city");
         String password = request.getParameter("password");
 
+        // Session use kar rahe hain error messages dikhane ke liye
+        HttpSession session = request.getSession();
+
         try {
             Connection conn = DBConnect.getConn();
-            // Query match kar rahi hai aapki nayi 'users' table se
+            
+            // Sabse Important: Connection check
+            if (conn == null) {
+                session.setAttribute("errorMsg", "Database Connection Failed! Check Cloud DB.");
+                response.sendRedirect("register.jsp"); // Ya jo bhi aapka register page ka path hai
+                return;
+            }
+
+            // Query logic
             String sql = "INSERT INTO users(name, email, mobile, gender, dob, city, password) VALUES(?,?,?,?,?,?,?)";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, name);
@@ -39,14 +51,17 @@ public class RegisterServlet extends HttpServlet {
             int i = ps.executeUpdate();
 
             if (i == 1) {
-                // Register hone ke baad seedha login page par bhej rahe hain
-                response.sendRedirect("jspfile/login.jsp");
+                session.setAttribute("succMsg", "Registration Successfully!");
+                response.sendRedirect("login.jsp"); // Folder structure ke hisaab se path check karein
             } else {
-                System.out.println("Registration failed!");
+                session.setAttribute("errorMsg", "Something went wrong on server!");
+                response.sendRedirect("register.jsp");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+            session.setAttribute("errorMsg", "Exception: " + e.getMessage());
+            response.sendRedirect("register.jsp");
         }
     }
 }
